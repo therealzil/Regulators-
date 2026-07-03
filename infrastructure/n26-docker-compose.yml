@@ -1,0 +1,93 @@
+version: "3.8"
+
+services:
+  sovereign-broker:
+    image: docker.redpanda.com/redpandadata/redpanda:v24.1.1
+    container_name: n26-sovereign-audit-broker
+    command:
+      - redpanda
+      - start
+      - --smp
+      - "1"
+      - --memory
+      - 2G
+      - --reserve-memory
+      - 0M
+      - --overprovisioned
+      - --kafka-addr
+      - internal://0.0.0.0:9092
+      - --advertise-kafka-addr
+      - internal://sovereign-broker:9092
+    networks:
+      - n26-isolated-subnet
+    volumes:
+      - broker-data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "info"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    security_opt:
+      - no-new-privileges:true
+
+  sovereign-core:
+    build:
+      context: ./core
+      dockerfile: Dockerfile.wasm.sgx
+    container_name: n26-sovereign-audit-core
+    depends_on:
+      sovereign-broker:
+        condition: service_healthy
+    networks:
+      - n26-isolated-subnet
+      - n26-egress-tunnel
+    environment:
+      - BROKER_URL=sovereign-broker:9092
+      - ENCLAVE_MODE=INTEL_SGX_ACTIVE
+      - HSM_BINDING=TRUE
+      - BATCH_INTERVAL_SECONDS=86400
+      - ERC4337_PAYMASTER_URL=https://relay.sovereign-llc.net
+      - PDF_SCHEMA=SINGLE_MODEL_FINANCIAL_PATHWAY
+    devices:
+      - /dev/sgx_enclave:/dev/sgx_enclave
+      - /dev/sgx_provision:/dev/sgx_provision
+    volumes:
+      - hsm-core-flash-state:/enclave/secure_storage
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  sovereign-dashboard:
+    image: jessesutton/sovereign-node-dashboard:bafin-secure
+    container_name: n26-sovereign-audit-dashboard
+    networks:
+      - n26-isolated-subnet
+    ports:
+      - 127.0.0.1:8080:80
+    environment:
+      - CORE_API_URL=http://sovereign-core:3000
+      - BROKER_TELEMETRY_STREAM=sovereign-broker:9092
+    depends_on:
+      - sovereign-core
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  n26-isolated-subnet:
+    driver: bridge
+    internal: true
+  n26-egress-tunnel:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+
+volumes:
+  broker-data:
+    driver: local
+  hsm-core-flash-state:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "size=512m,uid=1000,mode=700"
