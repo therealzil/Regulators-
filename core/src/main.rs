@@ -17,7 +17,7 @@ fn main() {
     println!("[SYSTEM] Execution Boundary Flag: {}", mode);
 
     match attestation_layer.generate_hardware_quote() {
-        Ok(quote) => {
+        Ok(_quote) => {
             println!("[SYSTEM] Hardware Cryptographic Fingerprint Latched.");
             // Live verification token would be broadcast to the logging layer here
         }

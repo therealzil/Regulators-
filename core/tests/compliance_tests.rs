@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use std::fs;
-    use std::path::Path;
+    use std::env;
 
     // Simulate an incoming BaFin structural payload request
     fn generate_mock_bafin_request() -> &'static str {
@@ -23,20 +23,20 @@ mod tests {
         println!("[TEST-HARNESS] Mock BaFin payload successfully parsed into sandbox memory.");
 
         // 2. Validate Transient Volume Availability (Flash State Sanity Check)
-        // In local mock environments, we verify we can write to a temporary path cleanly
-        let test_storage = "/tmp/mock_secure_storage";
-        if !Path::new(test_storage).exists() {
-            fs::create_dir_all(test_storage).unwrap();
+        // Use the OS-agnostic temp directory instead of hardcoded /tmp
+        let mut temp_dir = env::temp_dir();
+        temp_dir.push("mock_secure_storage");
+        if !temp_dir.exists() {
+            fs::create_dir_all(&temp_dir).expect("Failed to create mock storage");
         }
         
-        let test_file_path = format!("{}/test_flash.bin", test_storage);
+        let test_file_path = temp_dir.join("test_flash.bin");
         let write_result = fs::write(&test_file_path, incoming_payload);
         
         assert!(write_result.is_ok(), "Enclave simulation failed to write to transient memory sector");
         println!("[TEST-HARNESS] Volatile Flash State write cycle completed successfully.");
 
         // 3. Simulate Lifecycle Wipe Verification
-        // Verify the system can cleanly drop/remove files to simulate the 60-second obliteration cycle
         let cleanup_result = fs::remove_file(test_file_path);
         assert!(cleanup_result.is_ok(), "Flash State memory obliteration failed routine cycle");
         println!("[TEST-HARNESS] Post-audit data purge verified. Zero structural leakage detected.");
