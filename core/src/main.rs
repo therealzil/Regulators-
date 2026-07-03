@@ -1,3 +1,4 @@
+pub mod parser;
 use std::env;
 use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
