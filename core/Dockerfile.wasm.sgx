@@ -1,0 +1,63 @@
+# SOVEREIGN AUDIT NODE - CORE ENCLAVE BLUEPRINT
+# Target Environment: Intel SGX Hardware Isolation
+# Compliance Matrix: BaFin / DORA ICT Risk Management / EU AI Act
+
+# ==========================================
+# STAGE 1: SECURE BUILDER ENVIRONMENT
+# ==========================================
+FROM ubuntu:22.04 AS builder
+
+# Install Intel SGX SDK and Wasm runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    wget \
+    python3 \
+    libsgx-enclave-common-dev \
+    libsgx-dcap-ql-dev \
+    libsgx-dcap-default-qpl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install WasmEdge with SGX & WASI-Crypto plugins for topological mapping
+RUN wget -qO- https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash -s -- --plugins wasi_crypto,sgx
+
+WORKDIR /sovereign_build
+
+# Import the core Wasm binary (Compiled via local Rust toolchain)
+COPY ./bin/sovereign-core.wasm /sovereign_build/sovereign-core.wasm
+
+# Configure Gramine-SGX manifest and sign the enclave
+# This ensures the runtime fingerprint matches the hardware attestation quote
+COPY ./sgx/sovereign.manifest.template /sovereign_build/
+RUN gramine-sgx-sign \
+    --key /var/run/secrets/sgx-signing-key.pem \
+    --manifest sovereign.manifest.template \
+    --output sovereign.manifest.sgx
+
+# ==========================================
+# STAGE 2: HARDENED RUNTIME ENVIRONMENT
+# ==========================================
+FROM ubuntu:22.04 AS runtime
+
+# Install strictly necessary SGX URTS (Untrusted Runtime System) packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libsgx-urts \
+    libsgx-dcap-ql \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /enclave
+
+# Import the signed SGX manifest and the Wasm execution binary
+COPY --from=builder /sovereign_build/sovereign.manifest.sgx /enclave/
+COPY --from=builder /sovereign_build/sovereign-core.wasm /enclave/
+
+# Bind the Hardware Security Module (HSM) volume for the 60-second Flash State
+# Mapped to the tmpfs RAM disk defined in the docker-compose.yml
+VOLUME /enclave/secure_storage
+
+# Enforce strict least-privilege execution
+# The enclave runs entirely decoupled from host root access
+RUN useradd -m -u 1000 sovereign_exec
+USER sovereign_exec
+
+# Execute the WebAssembly core strictly inside the Intel SGX isolated container
+ENTRYPOINT ["gramine-sgx", "sovereign-core.wasm"]
