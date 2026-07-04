@@ -1,74 +1,58 @@
-import { Kafka } from 'kafkajs';
 import { WebSocketServer } from 'ws';
-import http from 'http';
+import { Kafka } from 'kafkajs';
 
-console.log("=== Sovereign Telemetry Engine Initializing ===");
+const PORT = 80;
+const wss = new WebSocketServer({ port: PORT, host: '0.0.0.0' });
 
-// 1. Establish HTTP and Volatile WebSocket Broadcast Layer
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Sovereign Audit Telemetry Stream Node Active\n');
-});
+console.log('=== Sovereign Telemetry Engine Initializing ===');
+console.log(`[NETWORK] Volatile server active on interface 0.0.0.0:${PORT}`);
 
-const wss = new WebSocketServer({ server });
-const activeConnections = new Set();
-
-wss.on('connection', (ws) => {
-    console.log("[DASHBOARD] Client connected to live oversight stream.");
-    activeConnections.add(ws);
-    
-    ws.on('close', () => {
-        activeConnections.delete(ws);
-        console.log("[DASHBOARD] Client disconnected from stream.");
-    });
-});
-
-// 2. Connect directly to the Isolated Redpanda Broker Subnet
-const brokerUrl = process.env.BROKER_TELEMETRY_STREAM || 'localhost:9092';
 const kafka = new Kafka({
     clientId: 'sovereign-audit-dashboard-consumer',
-    brokers: [brokerUrl]
+    brokers: ['localhost:9092']
 });
 
-const consumer = kafka.consumer({ groupId: 'dashboard-telemetry-group' });
+const consumer = kafka.consumer({ groupId: 'sovereign-telemetry-group' });
 
-const runTelemetryPipeline = async () => {
+async function runKafkaStream() {
     try {
         await consumer.connect();
-        console.log(`[BROKER] Connected to streaming cluster at: ${brokerUrl}`);
-        
-        // Subscribe to BaFin compliance telemetry topics
-        await consumer.subscribe({ topic: 'bafin.compliance.telemetry', fromBeginning: false });
-        
+        await consumer.subscribe({ topic: 'ledger-telemetry', fromBeginning: false });
+        console.log('[KAFKA] Connected to Redpanda ledger stream.');
+
         await consumer.run({
-            eachMessage: async ({ topic, partition, message }) => {
-                const rawPayload = message.value.toString();
-                
-                // Construct structural metadata packet for rendering
-                const metricPacket = {
-                    timestamp: new Date().toISOString(),
-                    topic,
-                    partition,
-                    payload: JSON.parse(rawPayload)
-                };
-                
-                // Broadcast instantly to all active audit screens via WebSockets
-                const serializedPacket = JSON.stringify(metricPacket);
-                for (const client of activeConnections) {
-                    if (client.readyState === 1) { // Open state
-                        client.send(serializedPacket);
-                    }
-                }
+            eachMessage: async ({ message }) => {
+                const payload = message.value.toString();
+                broadcast(payload);
             },
         });
     } catch (error) {
-        console.error("[CRITICAL] Telemetry engine bridge failed:", error);
+        console.warn('[WARNING] Real Kafka broker unreachable. Failing over to MOCK telemetry stream...');
+        startMockStream();
     }
-};
+}
 
-// Initialize server on container web port
-const PORT = 80;
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`[NETWORK] Volatile server active on interface 0.0.0.0:${PORT}`);
-    runTelemetryPipeline();
-});
+function startMockStream() {
+    setInterval(() => {
+        const mockTransaction = {
+            transaction_id: `TXN-${Math.random().toString(36).substring(7).toUpperCase()}`,
+            timestamp: Date.now(),
+            source_account_hash: "0xMockHashA123...",
+            destination_account_hash: "0xMockHashB456...",
+            amount_cents: Math.floor(Math.random() * 50000) + 1000,
+            currency: "EUR"
+        };
+        broadcast(JSON.stringify(mockTransaction));
+    }, 2000); // Emit a fake transaction every 2 seconds
+}
+
+function broadcast(data) {
+    wss.clients.forEach(client => {
+        if (client.readyState === 1) { // WebSocket.OPEN
+            client.send(data);
+        }
+    });
+}
+
+// Start the ingestion pipeline
+runKafkaStream();

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sovereign Telemetry Feed</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff00; font-family: monospace; padding: 20px; }
+        .log { margin-bottom: 5px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Live Ledger Audit Stream</h2>
+    <div id="output">Waiting for telemetry...</div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:80');
+        const output = document.getElementById('output');
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log';
+            logEntry.innerHTML = `[${new Date(data.timestamp).toLocaleTimeString()}] TXN: ${data.transaction_id} | AMOUNT: ${data.amount_cents} ${data.currency} <br> > SRC: ${data.source_account_hash} <br> > DST: ${data.destination_account_hash}`;
+            
+            output.prepend(logEntry);
+        };
+
+        ws.onopen = () => output.innerHTML = 'Connected to Enclave.<br><br>';
+        ws.onerror = () => output.innerHTML = 'Connection Error.';
+    </script>
+</body>
+</html>

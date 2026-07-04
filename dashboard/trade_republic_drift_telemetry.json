@@ -1,0 +1,222 @@
+[
+  {
+    "timestamp": "2026-07-03T22:36:32.254Z",
+    "elapsed_seconds": 1,
+    "ingress_metrics": {
+      "current_internal_tps": 1000,
+      "internal_ledger_cumulative": 5000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 3500,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 150,
+      "uncollateralized_exposure_eur": 750,
+      "systemic_drift_detected": false
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 150,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.279Z",
+    "elapsed_seconds": 2,
+    "ingress_metrics": {
+      "current_internal_tps": 2000,
+      "internal_ledger_cumulative": 10000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 7000,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 300,
+      "uncollateralized_exposure_eur": 1500,
+      "systemic_drift_detected": false
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 300,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.279Z",
+    "elapsed_seconds": 3,
+    "ingress_metrics": {
+      "current_internal_tps": 3000,
+      "internal_ledger_cumulative": 15000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 10500,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 450,
+      "uncollateralized_exposure_eur": 2250,
+      "systemic_drift_detected": false
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 450,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 4,
+    "ingress_metrics": {
+      "current_internal_tps": 4000,
+      "internal_ledger_cumulative": 20000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 14000,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 600,
+      "uncollateralized_exposure_eur": 3000,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 600,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 5,
+    "ingress_metrics": {
+      "current_internal_tps": 5000,
+      "internal_ledger_cumulative": 25000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 17500,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 750,
+      "uncollateralized_exposure_eur": 3750,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 750,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 6,
+    "ingress_metrics": {
+      "current_internal_tps": 5000,
+      "internal_ledger_cumulative": 30000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 21000,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 900,
+      "uncollateralized_exposure_eur": 4500,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 900,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 7,
+    "ingress_metrics": {
+      "current_internal_tps": 4000,
+      "internal_ledger_cumulative": 35000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 24500,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 1050,
+      "uncollateralized_exposure_eur": 5250,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 1050,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 8,
+    "ingress_metrics": {
+      "current_internal_tps": 3000,
+      "internal_ledger_cumulative": 40000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 28000,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 1200,
+      "uncollateralized_exposure_eur": 6000,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 1200,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 9,
+    "ingress_metrics": {
+      "current_internal_tps": 2000,
+      "internal_ledger_cumulative": 45000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 31500,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 1350,
+      "uncollateralized_exposure_eur": 6750,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 1350,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  },
+  {
+    "timestamp": "2026-07-03T22:36:32.280Z",
+    "elapsed_seconds": 10,
+    "ingress_metrics": {
+      "current_internal_tps": 1000,
+      "internal_ledger_cumulative": 50000
+    },
+    "egress_metrics": {
+      "custodian_settled_cumulative": 35000,
+      "settlement_efficiency_pct": 70
+    },
+    "fault_line_index": {
+      "shadow_delta_volume": 1500,
+      "uncollateralized_exposure_eur": 7500,
+      "systemic_drift_detected": true
+    },
+    "compliance_provenance": {
+      "article_50_violation_count": 1500,
+      "non_compliant_volume_pct": 30,
+      "l2_provenance_anchor": "MISSING_INTERNAL_ONLY_TRANSACTION"
+    }
+  }
+]
