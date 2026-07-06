@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Regulators — N26 Executive Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">Regulators — N26 Executive Demo</div>
+    <div class="environment">ENVIRONMENT: <span class="env-badge">DEMO_SANDBOX</span></div>
+  </header>
+
+  <main class="grid">
+    <section class="panel ledger">
+      <h2>Immutable Spine (Ledger Feed)</h2>
+      <div id="ledger" class="ledger-list" aria-live="polite"></div>
+      <div class="ledger-controls">
+        <button id="refresh-ledger">Refresh</button>
+        <button id="copy-all">Copy hashes</button>
+      </div>
+    </section>
+
+    <section class="panel terminal">
+      <h2>AST Guard Station — Pre‑flight Terminal</h2>
+      <div id="terminal" class="terminal-window" role="log" aria-live="off"></div>
+      <div class="terminal-controls">
+        <button id="run-preflight">Run pre‑flight</button>
+        <button id="clear-terminal">Clear</button>
+      </div>
+    </section>
+
+    <aside class="panel controls">
+      <h2>Compliance Presets</h2>
+      <div class="toggle">
+        <label><input type="checkbox" id="eu-act"> EU AI Act (2026)</label>
+      </div>
+      <div class="toggle">
+        <label><input type="checkbox" id="nist-rmf"> NIST AI RMF</label>
+      </div>
+
+      <h3>Active Rules</h3>
+      <div id="rules" class="rules-box">
+        <p class="muted">No presets active — toggles are demonstrative (SIMULATION_MODE)</p>
+      </div>
+
+      <hr>
+      <h3>Demo Controls</h3>
+      <p class="muted">Static demo only — no backend calls.</p>
+    </aside>
+  </main>
+
+  <footer class="footer">Built for N26 executive demo — static, auditable, and ready for GitHub Pages.</footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

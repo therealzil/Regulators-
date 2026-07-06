@@ -1,0 +1,47 @@
+:root{
+  --bg:#0b0f14;
+  --panel:#071019;
+  --muted:#9aa6b2;
+  --accent:#00d1b2;
+  --danger:#ff6b6b;
+  --mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(180deg,var(--bg),#041018 60%);
+  color:#e6eef3;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.title{font-weight:600}
+.env-badge{background:#102025;padding:6px 10px;border-radius:6px;font-family:var(--mono);color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:1fr 1fr 320px;gap:18px;padding:22px}
+.panel{background:linear-gradient(180deg,var(--panel),#031216);padding:16px;border-radius:10px;box-shadow:0 6px 30px rgba(0,0,0,0.6);}
+.panel h2{margin:0 0 12px 0}
+
+.ledger-list{max-height:520px;overflow:auto;padding:10px;background:rgba(0,0,0,0.25);border-radius:6px;font-family:var(--mono);font-size:13px}
+.ledger-item{padding:12px;border-bottom:1px dashed rgba(255,255,255,0.02)}
+.hash{display:block;color:var(--accent);word-break:break-all}
+.meta{color:var(--muted);font-size:12px;margin-top:6px}
+.ledger-controls{margin-top:12px;display:flex;gap:8px}
+button{background:#0e1b1a;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
+button:hover{color:#fff}
+
+.terminal-window{background:#000;border-radius:6px;padding:14px;height:340px;overflow:auto;font-family:var(--mono);font-size:13px;color:#bfe8e0}
+.terminal-controls{margin-top:12px;display:flex;gap:8px}
+
+.controls .toggle{margin-bottom:8px}
+.rules-box{background:rgba(255,255,255,0.02);padding:10px;border-radius:6px;min-height:120px}
+.muted{color:var(--muted)}
+
+.footer{text-align:center;padding:14px;color:var(--muted);font-size:13px}
+
+@media (max-width:1000px){
+  .grid{grid-template-columns:1fr;}
+}
